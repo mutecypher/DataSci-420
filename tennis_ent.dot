@@ -1,0 +1,21 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="outlook_overcast <= 0.5\nentropy = 0.918\nsamples = 12\nvalue = [4, 8]", fillcolor="#399de57f"] ;
+1 [label="humidity_normal <= 0.5\nentropy = 0.991\nsamples = 9\nvalue = [4, 5]", fillcolor="#399de533"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="outlook_rainy <= 0.5\nentropy = 0.811\nsamples = 4\nvalue = [3, 1]", fillcolor="#e58139aa"] ;
+1 -> 2 ;
+3 [label="entropy = 1.0\nsamples = 2\nvalue = [1, 1]", fillcolor="#e5813900"] ;
+2 -> 3 ;
+4 [label="entropy = 0.0\nsamples = 2\nvalue = [2, 0]", fillcolor="#e58139ff"] ;
+2 -> 4 ;
+5 [label="windy_true <= 0.5\nentropy = 0.722\nsamples = 5\nvalue = [1, 4]", fillcolor="#399de5bf"] ;
+1 -> 5 ;
+6 [label="entropy = 1.0\nsamples = 2\nvalue = [1, 1]", fillcolor="#e5813900"] ;
+5 -> 6 ;
+7 [label="entropy = 0.0\nsamples = 3\nvalue = [0, 3]", fillcolor="#399de5ff"] ;
+5 -> 7 ;
+8 [label="entropy = 0.0\nsamples = 3\nvalue = [0, 3]", fillcolor="#399de5ff"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+}
