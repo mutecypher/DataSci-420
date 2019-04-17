@@ -383,30 +383,50 @@ select business.name
 , business.postal_code,
 neighborhood
 from (business inner join category on business.id = category.business_id) inner join hours on hours.business_id = category.business_id
-where business.city = 'Las Vegas' 
+where business.city = 'Phoenix' 
+AND business.stars between 2 and 3 
+and category.category = 'Restaurants'
  group by business.stars ;
 
-+--------------------------------+-----------+------------------+-------+---------------------+--------------+-------------+---------------+
-| name                           | city      | category         | stars | hours               | review_count | postal_code | neighborhood  |
-+--------------------------------+-----------+------------------+-------+---------------------+--------------+-------------+---------------+
-| Walgreens                      | Las Vegas | Beauty & Spas    |   2.5 | Saturday|8:00-22:00 |            6 | 89121       | Eastside      |
-| Wingstop                       | Las Vegas | Restaurants      |   3.0 | Saturday|11:00-0:00 |          123 | 89103       |               |
-| Hi Scores - Blue Diamond       | Las Vegas | Bars             |   3.5 | Saturday|0:00-0:00  |          105 | 89139       | Southwest     |
-| Anthem Pediatrics              | Las Vegas | Health & Medical |   4.0 | Saturday|8:00-12:00 |           16 | 89118       | Spring Valley |
-| Red Rock Canyon Visitor Center | Las Vegas | Active Life      |   4.5 | Saturday|8:00-16:30 |           32 | 89161       |               |
-| Desert Medical Equipment       | Las Vegas | Shopping         |   5.0 | Monday|8:00-17:00   |            4 | 89118       |               |
-+--------------------------------+-----------+------------------+-------+---------------------+--------------+-------------+---------------+
-	
+
++-------------+---------+-------------+-------+--------------------+--------------+-------------+--------------+
+| name        | city    | category    | stars | hours              | review_count | postal_code | neighborhood |
++-------------+---------+-------------+-------+--------------------+--------------+-------------+--------------+
+| McDonald's  | Phoenix | Restaurants |   2.0 | Saturday|5:00-0:00 |            8 | 85004       |              |
+| Gallagher's | Phoenix | Restaurants |   3.0 | Saturday|9:00-2:00 |           60 | 85024       |              |
++-------------+---------+-------------+-------+--------------------+--------------+-------------+--------------+
+
+select business.name
+, business.city
+, category.category
+, business.stars
+, hours.hours
+, business.review_count
+, business.postal_code,
+neighborhood
+from (business inner join category on business.id = category.business_id) inner join hours on hours.business_id = category.business_id
+where business.city = 'Phoenix' 
+AND business.stars between 4 and 5 
+and category.category = 'Restaurants'
+ group by business.stars ;
+
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+--------------+
+| name                                   | city    | category    | stars | hours                | review_count | postal_code | neighborhood |
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+--------------+
+| Bootleggers Modern American Smokehouse | Phoenix | Restaurants |   4.0 | Saturday|11:00-22:00 |          431 | 85028       |              |
+| Charlie D's Catfish & Chicken          | Phoenix | Restaurants |   4.5 | Saturday|11:00-18:00 |            7 | 85034       |              |
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+--------------+
+
 i. Do the two groups you chose to analyze have a different distribution of hours?
 
-The 2-4 stars are all on Saturday, versus 4-5 stars are Saturday only. The 4-5 stars also include Mondays. 
+The  4-5 star restaurants open at 11AM, the 2-3 star restaurants open earlier (5AM and 9AM)
 
 
 
 ii. Do the two groups you chose to analyze have a different number of reviews?
          
+The 4-5 star restaurants have a total of 438 reviews, while the 2-3 star restaurants 68 reviews.
 
-The 2-3 star businesses have 234 reviews, while the 4-5 stars have 52 reviews
          
 iii. Are you able to infer anything from the location data provided between these two groups? Explain.
 
@@ -430,49 +450,93 @@ where business.city = 'Las Vegas'
 		
 2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
 		
-i. Difference 1:
+i. Difference 1:  The is_open = 0 has fewer reviews than any the others (7)
          
          
-ii. Difference 2:
+ii. Difference 2: The is_open = 0 has the highest number of stars (4.5) compared to 2-4 for the others.
          
          
          
 SQL code used for analysis:
 
+select business.name
+, business.city
+, category.category
+, business.stars
+, hours.hours
+, business.review_count
+, business.postal_code,
+business.is_open,
+neighborhood
+from (business inner join category on business.id = category.business_id) inner join hours on hours.business_id = category.business_id
+where business.city = 'Phoenix' 
+and category.category = 'Restaurants'
+ group by business.stars ;
 	
-	
+
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+---------+--------------+
+| name                                   | city    | category    | stars | hours                | review_count | postal_code | is_open | neighborhood |
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+---------+--------------+
+| McDonald's                             | Phoenix | Restaurants |   2.0 | Saturday|5:00-0:00   |            8 | 85004       |       1 |              |
+| Gallagher's                            | Phoenix | Restaurants |   3.0 | Saturday|9:00-2:00   |           60 | 85024       |       1 |              |
+| Five Guys                              | Phoenix | Restaurants |   3.5 | Saturday|10:00-22:00 |           63 | 85008       |       1 |              |
+| Bootleggers Modern American Smokehouse | Phoenix | Restaurants |   4.0 | Saturday|11:00-22:00 |          431 | 85028       |       1 |              |
+| Charlie D's Catfish & Chicken          | Phoenix | Restaurants |   4.5 | Saturday|11:00-18:00 |            7 | 85034       |       0 |              |
++----------------------------------------+---------+-------------+-------+----------------------+--------------+-------------+---------+--------------+
+
+
+
+
 3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
 
 
 	
 i. Indicate the type of analysis you chose to do:
          
-   I will compare  the word "excellent" to stars in a review  
+   I will compare  the word "excellent" to stars in a review, versus reviews that do not have that word.
     
 ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
 
 I will search for the word "excellent" in a review. I will then see how the sum of stars compare for the use of word "excellent."
-                           
+  
+As I look, there are roughly 100 times as many 5 star reviews with the word 'excellent" as 1 star reviews. And there are roughly
+10 times as many 5 star reviews not containing 'excellent" as 1 star reviews.                         
                   
 iii. Output of your finished dataset:
          
- +--------------+-------+
-| sum_of_starz | stars |
-+--------------+-------+
-|           14 |     1 |
-|           15 |     2 |
-|           41 |     3 |
-|          183 |     4 |
-|          354 |     5 |
-+--------------+-------+
++-------+-------------+
+| stars | total_stars |
++-------+-------------+
+|     1 |          14 |
+|     2 |          30 |
+|     3 |         123 |
+|     4 |         732 |
+|     5 |        1770 |
++-------+-------------+
 
         
 iv. Provide the SQL code you used to create your final dataset:
-
 select
-count (stars) As sum_of_starz
-,stars
+stars,
+sum(stars) AS total_stars
 from review
 where text like '%excellent%'
 group by stars
 
+
+select
+stars,
+sum(stars) AS total_stars
+from review
+where text not like '%excellent%'
+group by stars
+
++-------+-------------+
+| stars | total_stars |
++-------+-------------+
+|     1 |        1378 |
+|     2 |        1644 |
+|     3 |        3534 |
+|     4 |        8872 |
+|     5 |       18985 |
++-------+-------------+
